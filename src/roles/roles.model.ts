@@ -20,7 +20,7 @@ export class Role extends Model<Role, RoleCreationAttributes> {
   })
   id: number;
 
-  @ApiProperty({ example: 'admin', description: 'Unique role'})
+  @ApiProperty({ example: 'ADMIN', description: 'Unique role'})
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   value: string;
 
