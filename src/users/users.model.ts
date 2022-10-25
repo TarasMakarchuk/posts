@@ -8,6 +8,7 @@ interface UserCreationAttributes {
 
 @Table({ tableName: 'users' })
 export class User extends Model<User, UserCreationAttributes> {
+
   @ApiProperty({ example: '1', description: 'Id, unique identifier'})
   @Column({
     type: DataType.INTEGER,
