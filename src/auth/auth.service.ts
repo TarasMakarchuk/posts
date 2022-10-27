@@ -2,10 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserWithThisEmailAlreadyExists } from '../exceptions/userWithThisEmailAlreadyExists';
+import { UserEmailAlreadyExistsException } from '../exceptions/user-email-already-exists.exception';
 import * as bcrypt from 'bcryptjs';
 import { User } from '../users/users.model';
-import { IncorrectUserCredentials } from '../exceptions/incorrectUserCredentials';
+import { IncorrectUserCredentialsException } from '../exceptions/incorrect-user-credentials.exception';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
   async registration(dto: CreateUserDto) {
     const candidate = await this.usersService.getUserByEmail(dto.email);
     if (candidate) {
-      throw new UserWithThisEmailAlreadyExists();
+      throw new UserEmailAlreadyExistsException();
     }
     const SALT = 5;
     const hashPassword = await bcrypt.hash(dto.password, SALT);
@@ -48,6 +48,6 @@ export class AuthService {
       return user;
     }
 
-    throw new IncorrectUserCredentials();
+    throw new IncorrectUserCredentialsException();
   }
 }
