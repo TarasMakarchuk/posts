@@ -4,7 +4,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserEmailAlreadyExistsException } from '../exceptions/user-email-already-exists.exception';
 import * as bcrypt from 'bcryptjs';
-import { User } from '../users/users.model';
+import { User } from '../users/user.model';
 import { IncorrectUserCredentialsException } from '../exceptions/incorrect-user-credentials.exception';
 
 @Injectable()
