@@ -26,6 +26,12 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## For start the project in docker
+- change in .env file row from `POSTGRES_HOST=localhost` to  `POSTGRES_HOST=postgres`
+- for build docker image run the command `docker-compose build`
+- for start docker image run the `docker-compose up`
+- for stop docker image run the `docker-compose down`
+
 ## Installation
 
 ```bash
