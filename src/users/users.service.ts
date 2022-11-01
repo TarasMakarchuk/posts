@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { RolesService } from '../roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
+import { hashedPassword } from '../helpers/bcryptjs.helper';
 
 @Injectable()
 export class UsersService {
@@ -14,10 +15,13 @@ export class UsersService {
   ) {}
 
   async createUser(dto: CreateUserDto) {
+    await this.getUserByEmail(dto.email);
     const role = await this.roleService.getRoleByValue('USER');
-    const user = await this.userRepository.create(dto);
+    const hashPassword = await hashedPassword(dto.password);
+    const user = await this.userRepository.create({ ...dto, password: hashPassword });
     await user.$set('roles', [role.id]);
     user.roles = [role];
+    user.password = '';
 
     return user;
   }

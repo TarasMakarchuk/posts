@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserEmailAlreadyExistsException } from '../exceptions/user-email-already-exists.exception';
-import * as bcrypt from 'bcryptjs';
 import { User } from '../users/user.model';
 import { IncorrectUserCredentialsException } from '../exceptions/incorrect-user-credentials.exception';
+import { hashedPassword, comparePasswords } from '../helpers/bcryptjs.helper';
 
 @Injectable()
 export class AuthService {
@@ -22,8 +22,8 @@ export class AuthService {
     if (candidate) {
       throw new UserEmailAlreadyExistsException();
     }
-    const SALT = 5;
-    const hashPassword = await bcrypt.hash(dto.password, SALT);
+
+    const hashPassword = await hashedPassword(dto.password);
     const user = await this.usersService.createUser({ ...dto, password: hashPassword });
 
     return this.generateToken(user);
@@ -41,10 +41,10 @@ export class AuthService {
     };
   };
 
-  private async validateUser(dto: CreateUserDto) {
+  public async validateUser(dto: CreateUserDto) {
     const user = await this.usersService.getUserByEmail(dto.email);
-    const passwordEqual = await bcrypt.compare(dto.password, user.password);
-    if (user && passwordEqual) {
+    const isPasswordsEqual = await comparePasswords(dto.password, user.password);
+    if (user && isPasswordsEqual) {
       return user;
     }
 
