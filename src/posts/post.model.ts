@@ -29,7 +29,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   content: string;
 
-  @ApiProperty({ example: 'Image', description: 'Should be jpeg/jpg/gif/png/svg format'})
+  @ApiProperty({ example: 'image.png', description: 'Should be jpeg/jpg/gif/png/svg format'})
   @Column({ type: DataType.STRING, allowNull: true })
   image: string;
 
