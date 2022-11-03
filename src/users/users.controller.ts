@@ -1,13 +1,14 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, UsePipes } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.model';
-import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from 'src/auth/role-auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
+import { ValidationPipe } from '../pipes/validation.pipe';
 
 @ApiTags('Users')
 @Controller('users')
@@ -16,6 +17,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'User creating' })
   @ApiResponse({ status: 200, type: User })
+  @UsePipes(ValidationPipe)
   @Post()
   create(@Body() userDto: CreateUserDto) {
     return this.usersService.createUser(userDto);
@@ -32,6 +34,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Give the user a role' })
   @ApiResponse({ status: 200 })
+  @UsePipes(ValidationPipe)
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('/role')
@@ -41,6 +44,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Ban user' })
   @ApiResponse({ status: 200 })
+  @UsePipes(ValidationPipe)
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('/ban')

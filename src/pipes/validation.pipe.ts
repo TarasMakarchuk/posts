@@ -3,7 +3,6 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { ValidationException } from 'src/exceptions/validation.exception';
 
-
 @Injectable()
 export class ValidationPipe implements PipeTransform<any>{
   async transform(value: any, metadata: ArgumentMetadata): Promise<any> {
@@ -13,8 +12,9 @@ export class ValidationPipe implements PipeTransform<any>{
       let messages = errors.map(error => {
         return `${error.property} - ${Object.values(error.constraints).join(', ')}`;
       });
-      throw new ValidationException(messages)
+      throw new ValidationException(messages);
     }
+
     return value;
   };
 }
