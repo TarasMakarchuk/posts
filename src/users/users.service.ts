@@ -24,15 +24,19 @@ export class UsersService {
     user.password = '';
 
     return user;
-  }
+  };
 
   async getAllUsers() {
     return await this.userRepository.findAll({ include: { all: true } });
-  }
+  };
 
   async getUserByEmail(email: string) {
     return await this.userRepository.findOne({ where: { email }, include: { all: true } });
-  }
+  };
+
+  async getUserById(id: number) {
+    return await this.userRepository.findOne({ where: { id }, include: { all: true } });
+  };
 
   async addRole(dto: AddRoleDto) {
     const user = await this.userRepository.findByPk(dto.userId);
@@ -42,7 +46,7 @@ export class UsersService {
       return dto;
     }
     throw new HttpException('User or role not found', HttpStatus.NOT_FOUND);
-  }
+  };
 
   async ban(dto: BanUserDto) {
     const user = await this.userRepository.findByPk(dto.userId);
@@ -54,5 +58,17 @@ export class UsersService {
     await user.save();
 
     return user;
+  };
+
+  async remove(id: number) {
+    const user = await this.getUserById(id);
+    if (!user) {
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+    }
+    await this.userRepository.destroy( { where: { id } } );
+
+    return `Success, user with id ${id} was deleted`;
   }
 }
