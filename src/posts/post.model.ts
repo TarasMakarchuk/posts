@@ -1,6 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/users/user.model';
+import { User } from '../users/user.model';
 
 interface PostCreationAttributes {
   title: string;
