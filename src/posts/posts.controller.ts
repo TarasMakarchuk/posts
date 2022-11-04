@@ -39,5 +39,5 @@ export class PostsController {
   @Delete(':id')
   remove(@Param('id') id: number): Promise<string> {
     return this.postsService.remove(id);
-  }
+  };
 }
