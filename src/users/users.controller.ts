@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.model';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Roles } from 'src/auth/role-auth.decorator';
+import { Roles } from '../auth/role-auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
