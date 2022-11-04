@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from "../users/dto/create-user.dto";
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserEmailAlreadyExistsException } from '../exceptions/user-email-already-exists.exception';
 import { User } from '../users/user.model';
 import { IncorrectUserCredentialsException } from '../exceptions/incorrect-user-credentials.exception';
-import { hashedPassword, comparePasswords } from '../helpers/bcryptjs.helper';
+import { comparePasswords } from '../helpers/bcryptjs.helper';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +15,7 @@ export class AuthService {
   async login(dto: CreateUserDto) {
     const user = await this.validateUser(dto);
     return this.generateToken(user);
-  }
+  };
 
   async registration(dto: CreateUserDto) {
     const candidate = await this.usersService.getUserByEmail(dto.email);
@@ -23,8 +23,7 @@ export class AuthService {
       throw new UserEmailAlreadyExistsException();
     }
 
-    const hashPassword = await hashedPassword(dto.password);
-    const user = await this.usersService.createUser({ ...dto, password: hashPassword });
+    const user = await this.usersService.createUser(dto);
 
     return this.generateToken(user);
   };
@@ -49,5 +48,5 @@ export class AuthService {
     }
 
     throw new IncorrectUserCredentialsException();
-  }
+  };
 }

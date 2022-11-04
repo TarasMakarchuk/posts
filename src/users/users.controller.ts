@@ -21,7 +21,7 @@ export class UsersController {
   @Post()
   create(@Body() userDto: CreateUserDto) {
     return this.usersService.createUser(userDto);
-  }
+  };
 
   @ApiOperation({ summary: 'Get all users list' })
   @ApiResponse({ status: 200, type: [User] })
@@ -30,7 +30,7 @@ export class UsersController {
   @Get()
   getAll() {
     return this.usersService.getAllUsers();
-  }
+  };
 
   @ApiOperation({ summary: 'Give the user a role' })
   @ApiResponse({ status: 200 })
@@ -40,7 +40,7 @@ export class UsersController {
   @Post('/role')
   addRole(@Body() dto: AddRoleDto) {
     return this.usersService.addRole(dto);
-  }
+  };
 
   @ApiOperation({ summary: 'Ban user' })
   @ApiResponse({ status: 200 })
@@ -50,7 +50,7 @@ export class UsersController {
   @Post('/ban')
   ban(@Body() dto: BanUserDto) {
     return this.usersService.ban(dto);
-  }
+  };
 
   @ApiOperation({ summary: 'Delete user' })
   @ApiResponse({ status: 200 })
@@ -60,5 +60,5 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: number): Promise<string> {
     return this.usersService.remove(id);
-  }
+  };
 }

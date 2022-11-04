@@ -19,5 +19,5 @@ export class FilesService {
     } catch (e) {
       throw new HttpException("an error occurred while writing the file", HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
+  };
 }
