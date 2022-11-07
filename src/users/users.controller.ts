@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -9,6 +9,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { ValidationPipe } from '../pipes/validation.pipe';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -16,11 +17,19 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @ApiOperation({ summary: 'User creating' })
-  @ApiResponse({ status: 200, type: User })
+  @ApiResponse({ status: 201, type: User })
   @UsePipes(ValidationPipe)
   @Post()
-  create(@Body() userDto: CreateUserDto) {
-    return this.usersService.createUser(userDto);
+  create(@Body() dto: CreateUserDto) {
+    return this.usersService.createUser(dto);
+  };
+
+  @ApiOperation({ summary: 'User updating' })
+  @ApiResponse({ status: 200, type: User })
+  @UsePipes(ValidationPipe)
+  @Put()
+  update(@Body() dto: UpdateUserDto) {
+    return this.usersService.updateUser(dto);
   };
 
   @ApiOperation({ summary: 'Get all users list' })

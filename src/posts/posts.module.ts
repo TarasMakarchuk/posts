@@ -6,6 +6,7 @@ import { User } from '../users/user.model';
 import { Post } from './post.model';
 import { FilesModule } from '../files/files.module';
 import { JwtService } from '@nestjs/jwt';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   providers: [PostsService, JwtService],
@@ -13,6 +14,7 @@ import { JwtService } from '@nestjs/jwt';
   imports: [
     SequelizeModule.forFeature([User, Post]),
     FilesModule,
+    UsersModule,
   ],
 })
 

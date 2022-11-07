@@ -6,6 +6,7 @@ import { RolesService } from '../roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { hashedPassword } from '../helpers/bcryptjs.helper';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +25,24 @@ export class UsersService {
     user.password = '';
 
     return user;
+  };
+
+  async updateUser(dto: UpdateUserDto): Promise<User> {
+    const hashPassword = await hashedPassword(dto.password);
+    let user = await this.getUserById(dto.userId);
+    if (user) {
+      await user.set({
+        firstName: dto.firstName === ''  ? user.firstName : dto.firstName,
+        lastName: dto.lastName === '' ? user.lastName : dto.lastName,
+        email: dto.email === '' ? user.email : dto.email,
+        password: dto.password === '' ? user.password : hashPassword
+      });
+      user = await user.save();
+
+      return user;
+    }
+
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   };
 
   async getAllUsers() {
