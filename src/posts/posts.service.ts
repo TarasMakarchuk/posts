@@ -19,7 +19,7 @@ export class PostsService {
 
   async updatePost(dto: UpdatePostDto, image: any): Promise<Post> {
     const user = await this.usersService.getUserById(dto.userId);
-    let post = await this.getPostById(+dto.postId);
+    let post = await this.getPostById(dto.postId);
     const fileName = image ? await this.filesService.createFile(image) : null;
     if (user && post) {
       await post.set({
