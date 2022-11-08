@@ -7,6 +7,7 @@ import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { hashedPassword } from '../helpers/bcryptjs.helper';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEmailAlreadyExistsException } from '../exceptions/user-email-already-exists.exception';
 
 @Injectable()
 export class UsersService {
@@ -16,7 +17,10 @@ export class UsersService {
   ) {}
 
   async createUser(dto: CreateUserDto) {
-    await this.getUserByEmail(dto.email);
+    const found = await this.getUserByEmail(dto.email);
+    if (found) {
+      throw new UserEmailAlreadyExistsException();
+    }
     const role = await this.roleService.getRoleByValue('USER');
     const hashPassword = await hashedPassword(dto.password);
     const user = await this.userRepository.create({ ...dto, password: hashPassword });

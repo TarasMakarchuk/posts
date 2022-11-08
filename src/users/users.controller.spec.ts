@@ -8,25 +8,44 @@ describe('UsersController', () => {
   let service: UsersService;
   let jwtService: JwtService;
 
+  const mockUsersService = {
+    createUser: jest.fn(dto => {
+      return {
+        id: Date.now(),
+        ...dto,
+      };
+    }),
+    updateUser: jest.fn().mockImplementation(dto => ({
+      ...dto
+    })),
+    getAll: jest.fn(),
+    addRole: jest.fn(),
+    ban: jest.fn(),
+    remove: jest.fn(),
+  };
+
+  const mockJwtService = {
+    canActivate: jest.fn(),
+  };
+
+  const userDto = {
+    firstName: "User",
+    lastName: "User",
+    email: "user@gmail.com",
+    password: "111"
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
       providers: [
         {
           provide: UsersService,
-          useValue: {
-            create: jest.fn(),
-            getAll: jest.fn(),
-            addRole: jest.fn(),
-            ban: jest.fn(),
-            remove: jest.fn(),
-          }
+          useValue: mockUsersService,
         },
         {
           provide: JwtService,
-          useValue: {
-            canActivate: jest.fn(),
-          }
+          useValue: mockJwtService,
         }
       ],
     }).compile();
@@ -39,5 +58,31 @@ describe('UsersController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+    expect(service).toBeDefined();
+    expect(jwtService).toBeDefined();
   });
+
+  it('should create a user ', () => {
+    expect(controller.create(userDto)).toEqual({
+      id: expect.any(Number),
+      firstName: userDto.firstName,
+      lastName: expect.any(String),
+      email: expect.any(String),
+      password: expect.any(String),
+    });
+
+    expect(mockUsersService.createUser).toHaveBeenCalledWith(userDto);
+  });
+
+  it('should update a user ', () => {
+    const dto = {
+      userId: 1,
+      firstName: 'User1',
+    };
+
+    expect(controller.update(dto)).toEqual(dto)
+    expect(mockUsersService.updateUser).toHaveBeenCalled();
+  });
+
+
 });
