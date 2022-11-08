@@ -8,17 +8,17 @@ export class UpdateUserDto {
 
   @ApiProperty({ example: 'John', description: 'First name'})
   @IsString({ message: 'First name should be a string'})
-  readonly firstName: string;
+  readonly firstName?: string;
 
   @ApiProperty({ example: 'Doe', description: 'Last name'})
   @IsString({ message: 'Last name should be a string'})
-  readonly lastName: string;
+  readonly lastName?: string;
 
   @ApiProperty({ example: 'user@email.com', description: 'Email, unique identifier'})
   @IsString({ message: 'Email should be string'})
-  readonly email: string;
+  readonly email?: string;
 
   @ApiProperty({ example: '123Abc', description: 'Password'})
   @IsString({ message: 'It should be a string'})
-  readonly password: string;
+  readonly password?: string;
 }
