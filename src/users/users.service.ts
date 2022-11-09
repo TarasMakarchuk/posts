@@ -5,6 +5,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { RolesService } from '../roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
+import { hashedPassword } from '../helpers/bcryptjs.helper';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEmailAlreadyExistsException } from '../exceptions/user-email-already-exists.exception';
 
 @Injectable()
 export class UsersService {
@@ -14,21 +17,49 @@ export class UsersService {
   ) {}
 
   async createUser(dto: CreateUserDto) {
+    const found = await this.getUserByEmail(dto.email);
+    if (found) {
+      throw new UserEmailAlreadyExistsException();
+    }
     const role = await this.roleService.getRoleByValue('USER');
-    const user = await this.userRepository.create(dto);
+    const hashPassword = await hashedPassword(dto.password);
+    const user = await this.userRepository.create({ ...dto, password: hashPassword });
     await user.$set('roles', [role.id]);
     user.roles = [role];
+    user.password = '';
 
     return user;
-  }
+  };
+
+  async updateUser(dto: UpdateUserDto): Promise<User> {
+    const hashPassword = await hashedPassword(dto.password);
+    let user = await this.getUserById(dto.userId);
+    if (user) {
+      await user.set({
+        firstName: dto.firstName === ''  ? user.firstName : dto.firstName,
+        lastName: dto.lastName === '' ? user.lastName : dto.lastName,
+        email: dto.email === '' ? user.email : dto.email,
+        password: dto.password === '' ? user.password : hashPassword
+      });
+      user = await user.save();
+
+      return user;
+    }
+
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  };
 
   async getAllUsers() {
     return await this.userRepository.findAll({ include: { all: true } });
-  }
+  };
 
   async getUserByEmail(email: string) {
     return await this.userRepository.findOne({ where: { email }, include: { all: true } });
-  }
+  };
+
+  async getUserById(id: number) {
+    return await this.userRepository.findOne({ where: { id }, include: { all: true } });
+  };
 
   async addRole(dto: AddRoleDto) {
     const user = await this.userRepository.findByPk(dto.userId);
@@ -38,7 +69,7 @@ export class UsersService {
       return dto;
     }
     throw new HttpException('User or role not found', HttpStatus.NOT_FOUND);
-  }
+  };
 
   async ban(dto: BanUserDto) {
     const user = await this.userRepository.findByPk(dto.userId);
@@ -50,5 +81,17 @@ export class UsersService {
     await user.save();
 
     return user;
+  };
+
+  async remove(id: number) {
+    const user = await this.getUserById(id);
+    if (!user) {
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+    }
+    await this.userRepository.destroy( { where: { id } } );
+
+    return `Success, user with id ${id} was deleted`;
   }
 }

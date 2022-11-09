@@ -2,16 +2,19 @@ import { Module } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from 'src/users/user.model';
+import { User } from '../users/user.model';
 import { Post } from './post.model';
-import { FilesModule } from 'src/files/files.module';
+import { FilesModule } from '../files/files.module';
+import { JwtService } from '@nestjs/jwt';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  providers: [PostsService],
+  providers: [PostsService, JwtService],
   controllers: [PostsController],
   imports: [
     SequelizeModule.forFeature([User, Post]),
     FilesModule,
+    UsersModule,
   ],
 })
 

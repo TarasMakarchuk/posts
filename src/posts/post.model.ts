@@ -1,6 +1,6 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/users/user.model';
+import { User } from '../users/user.model';
 
 interface PostCreationAttributes {
   title: string;
@@ -21,7 +21,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   })
   id: number;
 
-  @ApiProperty({ example: 'New processor', description: 'Post title'})
+  @ApiProperty({ example: 'New processor intel core i177', description: 'Post title'})
   @Column({ type: DataType.STRING, allowNull: false })
   title: string;
 
@@ -29,7 +29,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   content: string;
 
-  @ApiProperty({ example: 'Image', description: 'Should be jpeg/jpg/gif/png format'})
+  @ApiProperty({ example: 'image.png', description: 'Should be jpeg/jpg/gif/png/svg format'})
   @Column({ type: DataType.STRING, allowNull: true })
   image: string;
 
