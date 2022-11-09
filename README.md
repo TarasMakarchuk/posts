@@ -84,6 +84,6 @@ ___
 
 ## Swagger documentations `📚`
 
-### [Click here](http://localhost:5001/api/docs) 
+http://localhost:5001/api/docs 
 
 ___
